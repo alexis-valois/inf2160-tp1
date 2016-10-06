@@ -223,7 +223,7 @@ exclureActeurs (acteur, (x:xs)) = if nomActeur (acteur) == nomActeur (x) then xs
        - le premier qui satisfait le premier critère, 
 	   - le premier qui satisfait le deuxième critère 
 	   - etc...
-	Entrées: Triplet formé d'un film, d'une liste de critères et d'une liste d'acteurs 
+	Entrée: couple formé d'une liste de critères et d'une liste d'acteurs 
     Sortie: liste d'acteurs 
 	8pts-}
 
