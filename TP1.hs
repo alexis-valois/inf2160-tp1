@@ -109,7 +109,8 @@ instance Eq Film where
     Entrées: Liste de critères, Liste d'acteurs (dans cette ordre)
     Sortie: Liste d'acteurs	
 	3pts-}
-
+selectionActeursCriteres :: [Critere] -> [Acteur] -> [Acteur]
+selectionActeursCriteres _ _ = []
 	
 	
 
@@ -117,7 +118,8 @@ instance Eq Film where
     Entrées: un Film, une Liste d'acteurs (dans cette ordre)
 	Sortie: Liste d'acteurs
     3pts	-}
-
+selectionActeursFilm :: Film -> [Acteur] -> [Acteur]
+selectionActeursFilm _ _ = []
 	
 	
 
@@ -145,8 +147,8 @@ sommeSalaires lacteurs = sum (map revenuMin lacteurs)
    Entrée: Couple formé d'une maison de production et d'un film
    Sortie: Couple formé d'une maison de production et d'un film
    10pts-}
- 
- 
+produire :: (MaisonDeProd,Film) -> (MaisonDeProd,Film)
+produire _ = (PasDeProducteur,Film "Vide" Action PasDeRealisateur PasDeProducteur 0 0 0 0)
  
  
  
@@ -163,6 +165,9 @@ sommeSalaires lacteurs = sum (map revenuMin lacteurs)
 	Entrée: Triplet formé d'un film, d'une liste de critères et d'une liste d'acteurs 
     Sortie: Liste d'acteurs
     10pts	-}
+
+acteursSelectionnes :: (Film, [Critere], [Acteur]) -> [Acteur]
+acteursSelectionnes _ = []
 
 -- *************************************************************************************************************	
 -- *********************************** Fonctions d'aide pour cette question ************************************
@@ -196,8 +201,9 @@ ajouterFilmActeurs (film, ((Acteur nomA sexeA revenuM dateA restrictionA listeFi
 	Entrées: Triplet formé d'un film, d'une liste de critères et d'une liste d'acteurs 
     Sortie: Couple formé d'un film et d'une liste d'acteurs
 	8pts-}
-	
-	
+
+affectationDesRoles :: (Film, [Critere], [Acteur]) -> (Film, [Acteur])
+affectationDesRoles _ = (Film "Vide" Action PasDeRealisateur PasDeProducteur 0 0 0 0,[])
 	
 	
 	
@@ -226,7 +232,8 @@ exclureActeurs (acteur, (x:xs)) = if nomActeur (acteur) == nomActeur (x) then xs
 	Entrée: couple formé d'une liste de critères et d'une liste d'acteurs 
     Sortie: liste d'acteurs 
 	8pts-}
-
+selectionActeursCriteresNouvelle :: ([Critere], [Acteur]) -> [Acteur]
+selectionActeursCriteresNouvelle _ = []
 	
 	
 
@@ -241,6 +248,8 @@ exclureActeurs (acteur, (x:xs)) = if nomActeur (acteur) == nomActeur (x) then xs
 	Entrée: Triplet formé d'un film, d'une liste de critères et d'une liste d'acteurs 
     Sortie: liste d'acteurs 
 	8pts-}														  
+acteursSelectionnesNouvelle :: (Film, [Critere], [Acteur]) -> [Acteur]
+acteursSelectionnesNouvelle _ = []
 
 	
 	
@@ -261,6 +270,9 @@ exclureActeurs (acteur, (x:xs)) = if nomActeur (acteur) == nomActeur (x) then xs
     Sortie: Couple formé d'un film et de la liste d'acteurs 
 	6pts-}
 
+affectationDesRolesNouvelle :: (Film, [Critere], [Acteur]) -> (Film,[Acteur])
+affectationDesRolesNouvelle _ = (Film "Vide" Action PasDeRealisateur PasDeProducteur 0 0 0 0,[])
+
 	
 	
 
@@ -269,7 +281,7 @@ exclureActeurs (acteur, (x:xs)) = if nomActeur (acteur) == nomActeur (x) then xs
    Sortie: le cinéma  
    5pts-}
 attribuerFilmCinema :: (Cinema, Film, Int) -> Cinema
-
+attribuerFilmCinema _ = Cinema "Vide" "Vide" []
 
 -- ************************************************************************************* ----
 -- *  Début méthodes de services utiles pour certaines des prochaines questions             * ----
@@ -310,12 +322,12 @@ modifierPrixFilmCinema ((Cinema nomC adrC repertoireC), film, prix) = (Cinema no
 
 {- 14b - un cinema ajuste le nombre d'entrée pour un film donné 3pts-}
 ajusterEntreesFilmCinema :: (Cinema, Film, Int) -> Cinema
-		  
+ajusterEntreesFilmCinema _ = Cinema "Vide" "Vide" []		  
 		  
 {- 14c - Quel est le revenu total d'un film dans un cinema donnée? Retourner 0 si la liste des cinéma est vide ou si le film n'existe pas 
 4pts-}		  
 revenuFilmCinema :: Film -> Cinema -> Int
-
+revenuFilmCinema _ _ = 0
 
 {- 14d -  reconstitution du répertoire d'un cinéma après perte de données. Un cinéma doit absolument reconstituer son répertoire suite à une perte de celui-ci.
 seul recours: les 3 listes distinctes récupérées chez les producteurs, une contenant les films attribués, l'autre pour les entrées et la dernière pour les prix.
@@ -323,18 +335,20 @@ Heureusement que ces informations en provenance des producteurs, sont bien allig
 pour un cinéma donné. 
  5pts-}
 restorerRepertoire :: Cinema -> [Film] ->[Int] ->[Int]-> Cinema 
+restorerRepertoire _ _ _ _ = Cinema "Vide" "Vide" []
 
 {- 14e Quel est le niveau moyen d'achalandage d'un cinéma donné (soit le nombre moyen d'entrées par film); nom de la fonction: achalandage 
 4pts-}
 
-
+achalandage :: Cinema -> Int
+achalandage _ = 0
 
 {-  15a - Meilleurs films... En considérant que la valeur d'un film est donnée par son revenu total, écrire une fonction qui retourne étant donnée une liste de 
 films et une liste de cinemas, retourne une liste de pairs (film, revenuTotal) triée par ordre croissant de la valeur de chaque film.
 7pts 
  -}
 meilleursFilms :: [Film] -> [Cinema] -> [(Film, Int)]
-
+meilleursFilms _ _ = []
 
 {-  15b - Meilleur(s) acteur(s)... Il s'agit de l'acteur ou des acteurs ayant joué dans LE(S) meilleur(s) film(s) et qui a(ont) le plus d'expérience. Attention: Juste pour cette question, la notion 
 d'expérience d'un acteur s'estime uniquement par le nombre de films dans lesquels il a joué (et non par rapport au nombre d'années passé dans l'industrie. 
@@ -362,16 +376,18 @@ joueDans act@(Acteur _ _ _ _ _ facteur) (f:fs) =  (elem f facteur) || (joueDans 
 -- *********************** Fin: Fonctions d'aide pour cette questions      *************************************
 -- *************************************************************************************************************
 meilleursActeurs :: [Acteur] -> [Film] -> [Cinema] -> [(Acteur, Int)]
-
+meilleursActeurs _ _ _ = []
 	
 
 {- 15c - écrire la fonction box_office qui calcule et retourne le revenu total d'un film pour une liste de salle de cinema donnée. Tenir compte du prix du film pour chaque cinema et du nombre d'entrées.
 Retourner 0 si la liste des cinéma est vide ou si le film n'existe pas 
 7pts-}		  
 box_office :: Film -> [Cinema] -> Int
-	
+box_office _ _ = 0	
 									
 {-  15d- La fonction profit retourne vraie si le film diffusé dans les salles de cinéma données a engendré des profits et faux la cas échéant.
 il y a profit pour un film si son revenu total dans l'ensemble des cinemas de la liste donnée est est supérieur à son coût de production.
 4pts
 -}	
+profit :: (Film, [Cinema]) -> Bool
+profit _ = False
