@@ -110,7 +110,9 @@ instance Eq Film where
     Sortie: Liste d'acteurs	
 	3pts-}
 selectionActeursCriteres :: [Critere] -> [Acteur] -> [Acteur]
-selectionActeursCriteres _ _ = []
+selectionActeursCriteres [] _ = _
+selectionActeursCriteres _ [] = []
+selectionActeursCriteres lcriteres lacteurs = [ac | ac <- [lacteurs], ]
 	
 	
 
