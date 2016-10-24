@@ -110,9 +110,9 @@ instance Eq Film where
     Sortie: Liste d'acteurs	
 	3pts-}
 selectionActeursCriteres :: [Critere] -> [Acteur] -> [Acteur]
-selectionActeursCriteres [] _ = _
+selectionActeursCriteres [] lacteurs = lacteurs
 selectionActeursCriteres _ [] = []
-selectionActeursCriteres lcriteres lacteurs = [ac | ac <- [lacteurs], ]
+selectionActeursCriteres lcriteres lacteurs = [ac | ac <- lacteurs, foldl (\acc x -> acc && (x ac) ) True lcriteres]
 	
 	
 
@@ -121,8 +121,8 @@ selectionActeursCriteres lcriteres lacteurs = [ac | ac <- [lacteurs], ]
 	Sortie: Liste d'acteurs
     3pts	-}
 selectionActeursFilm :: Film -> [Acteur] -> [Acteur]
-selectionActeursFilm _ _ = []
-	
+selectionActeursFilm _ [] = []
+selectionActeursFilm film lacteurs = [ac | ac <- lacteurs, restriction ac film]
 	
 
 {-  3- la fonction prendrePremier prend un couple (n,l) et retourne les n premiers elements de la liste l.
