@@ -186,8 +186,17 @@ produire (maison, film) | realisateur film == PasDeRealisateur = throw PasDeReal
     Sortie: Liste d'acteurs
     10pts	-}
 
+filmsActeurs (Acteur _ _ _ _ _ l) = l
+
 acteursSelectionnes :: (Film, [Critere], [Acteur]) -> [Acteur]
-acteursSelectionnes _ = []
+acteursSelectionnes (film, lcriteres, lacteurs) | realisateur film == PasDeRealisateur = throw PasDeRealisateur
+                                                | producteur film == PasDeProducteur = throw PasDeProducteur
+                                                | getnbacteurF film > (length acc) = throw PasAssezDacteurs
+                                                | sommeSalaires acc > getbudgetF film = throw BudgetInsuffisant
+                                                | otherwise = acc
+                                                  where
+                                                    acc = ajouterFilmActeurs (film, ( selectionActeursFilm film (selectionActeursCriteres lcriteres lacteurs) ) )
+
 
 -- *************************************************************************************************************	
 -- *********************************** Fonctions d'aide pour cette question ************************************
