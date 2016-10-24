@@ -149,10 +149,28 @@ sommeSalaires lacteurs = sum (map revenuMin lacteurs)
    Entrée: Couple formé d'une maison de production et d'un film
    Sortie: Couple formé d'une maison de production et d'un film
    10pts-}
+
+realisateur (Film _ _ r _ _ _ _ _) = r
+producteur (Film _ _ _ p _ _ _ _) = p
+cout (Film _ _ _ _ c _ _ _) = c
+typeFilm (Film _ t _ _ _ _ _ _) = t
+dureeFilm (Film _ _ _ _ _ d _ _) = d
+nbActeurs (Film _ _ _ _ _ _ n _) = n
+budgetFilm (Film _ _ _ _ _ _ _ b) = b
+
+budgetMaison (MaisonDeProd _ b _) = b
+nomMaison (MaisonDeProd n _ _) = n
+filmsMaison (MaisonDeProd _ _ l) = l
+
+
 produire :: (MaisonDeProd,Film) -> (MaisonDeProd,Film)
-produire _ = (PasDeProducteur,Film "Vide" Action PasDeRealisateur PasDeProducteur 0 0 0 0)
- 
- 
+produire (maison, film) | realisateur film == PasDeRealisateur = throw PasDeRealisateur
+                        | producteur film /= PasDeProducteur = throw DejaProduit
+                        | cout film > budgetMaison maison = throw BudgetInsuffisant
+                        | otherwise = (m,f)
+                          where
+                            m = MaisonDeProd (nomMaison maison) ( (budgetMaison maison) - cout film ) (film:(filmsMaison maison))
+                            f = Film (titreFilm film) (typeFilm film) (realisateur film) m (cout film) (dureeFilm film) (nbActeurs film) (budgetFilm film)
  
  
 {-  6- la fonction acteursSelectionnes (film, lcriteres, lacteurs) retourne la liste des acteurs sélectionnés pour le film donné en paramètre.
