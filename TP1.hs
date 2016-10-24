@@ -155,8 +155,6 @@ producteur (Film _ _ _ p _ _ _ _) = p
 cout (Film _ _ _ _ c _ _ _) = c
 typeFilm (Film _ t _ _ _ _ _ _) = t
 dureeFilm (Film _ _ _ _ _ d _ _) = d
-nbActeurs (Film _ _ _ _ _ _ n _) = n
-budgetFilm (Film _ _ _ _ _ _ _ b) = b
 
 budgetMaison (MaisonDeProd _ b _) = b
 nomMaison (MaisonDeProd n _ _) = n
@@ -170,7 +168,7 @@ produire (maison, film) | realisateur film == PasDeRealisateur = throw PasDeReal
                         | otherwise = (m,f)
                           where
                             m = MaisonDeProd (nomMaison maison) ( (budgetMaison maison) - cout film ) (film:(filmsMaison maison))
-                            f = Film (titreFilm film) (typeFilm film) (realisateur film) m (cout film) (dureeFilm film) (nbActeurs film) (budgetFilm film)
+                            f = Film (titreFilm film) (typeFilm film) (realisateur film) m (cout film) (dureeFilm film) (getnbacteurF film) (getbudgetF film)
  
  
 {-  6- la fonction acteursSelectionnes (film, lcriteres, lacteurs) retourne la liste des acteurs sélectionnés pour le film donné en paramètre.
@@ -189,6 +187,8 @@ produire (maison, film) | realisateur film == PasDeRealisateur = throw PasDeReal
 filmsActeurs (Acteur _ _ _ _ _ l) = l
 
 acteursSelectionnes :: (Film, [Critere], [Acteur]) -> [Acteur]
+acteursSelectionnes (film, _, []) = []
+acteursSelectionnes (film, [], lacteurs) = ajouterFilmActeurs (film, ( selectionActeursFilm film lacteurs ) )
 acteursSelectionnes (film, lcriteres, lacteurs) | realisateur film == PasDeRealisateur = throw PasDeRealisateur
                                                 | producteur film == PasDeProducteur = throw PasDeProducteur
                                                 | getnbacteurF film > (length acc) = throw PasAssezDacteurs
@@ -232,10 +232,20 @@ ajouterFilmActeurs (film, ((Acteur nomA sexeA revenuM dateA restrictionA listeFi
 	8pts-}
 
 affectationDesRoles :: (Film, [Critere], [Acteur]) -> (Film, [Acteur])
-affectationDesRoles _ = (Film "Vide" Action PasDeRealisateur PasDeProducteur 0 0 0 0,[])
-	
-	
-	
+affectationDesRoles (film, lcriteres, lacteurs) | realisateur film == PasDeRealisateur = throw PasDeRealisateur
+                                                | getnbacteurF film > (length lacteurs) = throw PasAssezDacteurs
+                                                | sommeSalaires lacteurs > getbudgetF film = throw BudgetInsuffisant
+                                                | otherwise = 
+                                                  let f = remplacerBudgetCoutFilm film (sommeSalaires accChoisis)
+                                                  in (f, accChoisis)
+                                                  where
+                                                    accChoisis = prendrePremiers  ( (getnbacteurF film), (acteursSelectionnes (film, lcriteres, lacteurs)) )
+
+remplacerBudgetCoutFilm :: Film -> Int -> Film
+remplacerBudgetCoutFilm film budget = (Film (titreFilm film) (typeFilm film) (realisateur film) (producteur film) ((cout film) - (budgetInit - budget))  (dureeFilm film) (getnbacteurF film) budget)
+  where budgetInit = getbudgetF film
+
+
 {-  8- la fonction selectionnesSansRole retourne les acteurs d'une liste d'acteurs qui n'ont pas été selectionnés pour un rôle (car il y avait trop de candidats) mais qui satisfaisaient quand même :
        - Tous les criteres de la liste des critères
        - Pour lesquels film satisfait leur restrictions
