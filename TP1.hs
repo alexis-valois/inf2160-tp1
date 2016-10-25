@@ -272,7 +272,13 @@ exclureActeurs (acteur, (x:xs)) = if nomActeur (acteur) == nomActeur (x) then xs
     Sortie: liste d'acteurs 
 	8pts-}
 selectionActeursCriteresNouvelle :: ([Critere], [Acteur]) -> [Acteur]
-selectionActeursCriteresNouvelle _ = []
+selectionActeursCriteresNouvelle ([], lacteurs) = []
+selectionActeursCriteresNouvelle (_, []) = [] 
+selectionActeursCriteresNouvelle  ((x:xs), lacteurs) = case ac of
+                                                          Just ac -> ac:selectionActeursCriteresNouvelle (xs, lacteurs)
+                                                          Nothing -> selectionActeursCriteresNouvelle (xs, lacteurs)
+                                                       where
+                                                        ac = find (\act -> x act) lacteurs
 	
 	
 
