@@ -275,7 +275,7 @@ selectionActeursCriteresNouvelle :: ([Critere], [Acteur]) -> [Acteur]
 selectionActeursCriteresNouvelle ([], lacteurs) = []
 selectionActeursCriteresNouvelle (_, []) = [] 
 selectionActeursCriteresNouvelle  ((x:xs), lacteurs) = case ac of
-                                                          Just ac -> ac:selectionActeursCriteresNouvelle (xs, lacteurs)
+                                                          Just ac -> nub $ ac:selectionActeursCriteresNouvelle (xs, lacteurs)
                                                           Nothing -> selectionActeursCriteresNouvelle (xs, lacteurs)
                                                        where
                                                         ac = find (\act -> x act) lacteurs
@@ -294,7 +294,11 @@ selectionActeursCriteresNouvelle  ((x:xs), lacteurs) = case ac of
     Sortie: liste d'acteurs 
 	8pts-}														  
 acteursSelectionnesNouvelle :: (Film, [Critere], [Acteur]) -> [Acteur]
-acteursSelectionnesNouvelle _ = []
+acteursSelectionnesNouvelle (film, lcriteres, lacteurs) | realisateur film == PasDeRealisateur = throw PasDeRealisateur
+                                                        | getnbacteurF film > (length lacteurs) = throw PasAssezDacteurs
+                                                        | sommeSalaires lacteurs > getbudgetF film = throw BudgetInsuffisant
+                                                        | producteur film == PasDeProducteur = throw PasDeProducteur
+                                                        | otherwise = selectionActeursFilm film (selectionActeursCriteresNouvelle (lcriteres, lacteurs))
 
 	
 	
