@@ -275,8 +275,8 @@ selectionActeursCriteresNouvelle :: ([Critere], [Acteur]) -> [Acteur]
 selectionActeursCriteresNouvelle ([], lacteurs) = []
 selectionActeursCriteresNouvelle (_, []) = [] 
 selectionActeursCriteresNouvelle  ((x:xs), lacteurs) = case ac of
-                                                          Just ac -> nub $ ac:selectionActeursCriteresNouvelle (xs, lacteurs)
-                                                          Nothing -> selectionActeursCriteresNouvelle (xs, lacteurs)
+                                                          Just ac -> ac:selectionActeursCriteresNouvelle (xs, (delete ac lacteurs) )
+                                                          Nothing -> [] ++ selectionActeursCriteresNouvelle (xs, lacteurs)
                                                        where
                                                         ac = find (\act -> x act) lacteurs
 	
