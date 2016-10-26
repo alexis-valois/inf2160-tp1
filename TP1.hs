@@ -226,7 +226,8 @@ ajouterFilmActeurs (film, ((Acteur nomA sexeA revenuM dateA restrictionA listeFi
     De plus:
        - Si le réalisateur de film est PasDeRealisateur on invoque l'exception PasDeRealisateur
        - S'il n' y a pas assez d'acteurs on invoque l'exception PasAssezDacteurs
-       - Si le total des salaires minimums demandes par ces acteurs est supérieur au budget du film, on invoque l'exception BudgetInsuffisant.		
+       - Si le total des salaires minimums demandes par ces acteurs est supérieur au budget du film, on invoque l'exception BudgetInsuffisant.
+  Remarque: n'oubliez pas qu'une fois un acteur sélectionné, ce film doit s'ajouter à sa liste de films		
 	Entrées: Triplet formé d'un film, d'une liste de critères et d'une liste d'acteurs 
     Sortie: Couple formé d'un film et d'une liste d'acteurs
 	8pts-}
@@ -239,7 +240,7 @@ affectationDesRoles (film, lcriteres, lacteurs) | realisateur film == PasDeReali
                                                   let f = remplacerBudgetCoutFilm film (sommeSalaires accChoisis)
                                                   in (f, accChoisis)
                                                   where
-                                                    accChoisis = prendrePremiers  ( (getnbacteurF film), (acteursSelectionnes (film, lcriteres, lacteurs)) )
+                                                    accChoisis = ajouterFilmActeurs $ prendrePremiers  ( (getnbacteurF film), (acteursSelectionnes (film, lcriteres, lacteurs)) )
 
 remplacerBudgetCoutFilm :: Film -> Int -> Film
 remplacerBudgetCoutFilm film budget = (Film (titreFilm film) (typeFilm film) (realisateur film) (producteur film) ((cout film) - (budgetInit - budget))  (dureeFilm film) (getnbacteurF film) budget)
@@ -315,6 +316,7 @@ acteursSelectionnesNouvelle (film, lcriteres, lacteurs) | realisateur film == Pa
       - Si le producteur de film est PasDeProducteur on invoque l'exception PasDeProducteur
       - S'il n' y a pas assez d'acteurs on invoque l'exception PasAssezDacteurs
       - Si le total des salaires minimums demandes par ces acteurs est supérieur au budget du film, on invoque l'exception BudgetInsuffisant
+  Remarque: n'oubliez pas qu'une fois un acteur sélectionné, ce film doit s'ajouter à sa liste de films 
 	Entrée: Triplet formé d'un film, d'une liste de critères et d'une liste d'acteurs 
     Sortie: Couple formé d'un film et de la liste d'acteurs 
 	6pts-}
