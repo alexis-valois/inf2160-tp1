@@ -240,8 +240,7 @@ affectationDesRoles (film, lcriteres, lacteurs) | realisateur film == PasDeReali
                                                   let f = remplacerBudgetCoutFilm film (sommeSalaires accChoisis)
                                                   in (f, accChoisis)
                                                   where
-                                                    accChoisis = ajouterFilmActeurs $ prendrePremiers  ( (getnbacteurF film), (acteursSelectionnes (film, lcriteres, lacteurs)) )
-
+                                                      accChoisis = ajouterFilmActeurs (film, prendrePremiers ( getnbacteurF film, acteursSelectionnes (film, lcriteres, lacteurs) ) )
 remplacerBudgetCoutFilm :: Film -> Int -> Film
 remplacerBudgetCoutFilm film budget = (Film (titreFilm film) (typeFilm film) (realisateur film) (producteur film) ((cout film) - (budgetInit - budget))  (dureeFilm film) (getnbacteurF film) budget)
   where budgetInit = getbudgetF film
@@ -275,11 +274,15 @@ exclureActeurs (acteur, (x:xs)) = if nomActeur (acteur) == nomActeur (x) then xs
 selectionActeursCriteresNouvelle :: ([Critere], [Acteur]) -> [Acteur]
 selectionActeursCriteresNouvelle ([], lacteurs) = []
 selectionActeursCriteresNouvelle (_, []) = [] 
-selectionActeursCriteresNouvelle  ((x:xs), lacteurs) = case ac of
-                                                          Just ac -> ac:selectionActeursCriteresNouvelle (xs, (delete ac lacteurs) )
-                                                          Nothing -> [] ++ selectionActeursCriteresNouvelle (xs, lacteurs)
-                                                       where
-                                                        ac = find (\act -> x act) lacteurs
+selectionActeursCriteresNouvelle ([x], lacteurs) = [head (selectionActeursCriteres [x] lacteurs)]
+selectionActeursCriteresNouvelle ((x:xs), lacteurs) = let ac = head (selectionActeursCriteres [x] lacteurs)
+                                                      in ac:selectionActeursCriteresNouvelle (xs, (exclureActeurs (ac, lacteurs)) )
+
+-- selectionActeursCriteresNouvelle ((x:xs), lacteurs) = case ac of
+--                                                           Just ac -> ac:selectionActeursCriteresNouvelle (xs, (exclureActeurs (ac, lacteurs)) )
+--                                                           Nothing -> [] ++ selectionActeursCriteresNouvelle (xs, lacteurs)
+--                                                        where
+--                                                         ac = find (\act -> x act) lacteurs
 	
 	
 
@@ -304,7 +307,6 @@ acteursSelectionnesNouvelle (film, lcriteres, lacteurs) | realisateur film == Pa
 	
 	
 	
-
 {-  12- La fonction affectationDesRolesNouvelle (film, lcriteres, lacteurs) retourne un couple dont
       - la première composante est formée d'un Film égal à film sauf que son budget a été remplacé par la somme des salaires minimums des acteurs choisis (voir deuxième
 	    composante) et son coût a été diminué de la différence entre le budget initial et le nouveau budget
@@ -322,10 +324,17 @@ acteursSelectionnesNouvelle (film, lcriteres, lacteurs) | realisateur film == Pa
 	6pts-}
 
 affectationDesRolesNouvelle :: (Film, [Critere], [Acteur]) -> (Film,[Acteur])
-affectationDesRolesNouvelle _ = (Film "Vide" Action PasDeRealisateur PasDeProducteur 0 0 0 0,[])
-
-	
-	
+affectationDesRolesNouvelle (film, [], lacteurs) = (film, [])
+affectationDesRolesNouvelle (film, lcriteres, []) = (film, []) 
+affectationDesRolesNouvelle (film, lcriteres, lacteurs) | realisateur film == PasDeRealisateur = throw PasDeRealisateur
+                                                        | getnbacteurF film > (length lacteurs) = throw PasAssezDacteurs
+                                                        | sommeSalaires lacteurs > getbudgetF film = throw BudgetInsuffisant
+                                                        | producteur film == PasDeProducteur = throw PasDeProducteur
+                                                        | otherwise = 
+                                                          let f = remplacerBudgetCoutFilm film (sommeSalaires accChoisis)
+                                                          in (f, accChoisis)
+                                                          where
+                                                            accChoisis = ajouterFilmActeurs (film, prendrePremiers  ( getnbacteurF film, selectionActeursCriteresNouvelle (lcriteres, lacteurs) ) )
 
 {- 13 - la fonction attribuerFilmCinema prend un couple formé d'un cinéma, un film et le prix (un entier) d'une entrée puis retourne ce cinéma avec son repertoire modifié. NB: une nouvelle attribution ajoute le film toujours en tête du répertoire.
    Entrée: triplet formé  d'un cinéma, un film et le prix d'une entrée
