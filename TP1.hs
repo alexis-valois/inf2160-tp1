@@ -234,8 +234,8 @@ ajouterFilmActeurs (film, ((Acteur nomA sexeA revenuM dateA restrictionA listeFi
 
 affectationDesRoles :: (Film, [Critere], [Acteur]) -> (Film, [Acteur])
 affectationDesRoles (film, lcriteres, lacteurs) | realisateur film == PasDeRealisateur = throw PasDeRealisateur
-                                                | getnbacteurF film > (length lacteurs) = throw PasAssezDacteurs
-                                                | sommeSalaires lacteurs > getbudgetF film = throw BudgetInsuffisant
+                                                | getnbacteurF film > (length accChoisis) = throw PasAssezDacteurs
+                                                | sommeSalaires accChoisis > getbudgetF film = throw BudgetInsuffisant
                                                 | otherwise = 
                                                   let f = remplacerBudgetCoutFilm film (sommeSalaires accChoisis)
                                                   in (f, accChoisis)
