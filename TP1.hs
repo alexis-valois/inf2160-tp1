@@ -345,12 +345,20 @@ affectationDesRolesNouvelle (film, lcriteres, lacteurs) | realisateur film == Pa
                                                             n = getnbacteurF film
                                                             accChoisis = ajouterFilmActeurs (film, prendrePremiers  (n, acteursSelectionnesNouvelle (film, take n lcriteres, lacteurs) ) )
 
-{- 13 - la fonction attribuerFilmCinema prend un couple formé d'un cinéma, un film et le prix (un entier) d'une entrée puis retourne ce cinéma avec son repertoire modifié. NB: une nouvelle attribution ajoute le film toujours en tête du répertoire.
+{- 13 - la fonction attribuerFilmCinema prend un couple formé d'un cinéma, un film et le prix (un entier) d'une entrée puis retourne ce cinéma avec son repertoire 
+   modifié. NB: une nouvelle attribution ajoute le film toujours en tête du répertoire.
    Entrée: triplet formé  d'un cinéma, un film et le prix d'une entrée
    Sortie: le cinéma  
    5pts-}
+
+nomCinema (Cinema n _ _) = n
+adresseCinema (Cinema _ a _) = a
+repertoireCinema' (Cinema _ _ r) = r
+
 attribuerFilmCinema :: (Cinema, Film, Int) -> Cinema
-attribuerFilmCinema _ = Cinema "Vide" "Vide" []
+attribuerFilmCinema (cinema, film, prix) = ( Cinema (nomCinema cinema) (adresseCinema cinema) rep)
+                                            where
+                                              rep = (film,0,prix):(repertoireCinema' cinema)
 
 -- ************************************************************************************* ----
 -- *  Début méthodes de services utiles pour certaines des prochaines questions             * ----
