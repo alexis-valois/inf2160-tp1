@@ -399,8 +399,11 @@ modifierPrixFilmCinema ((Cinema nomC adrC repertoireC), film, prix) = (Cinema no
 
 {- 14b - un cinema ajuste le nombre d'entrée pour un film donné 3pts-}
 ajusterEntreesFilmCinema :: (Cinema, Film, Int) -> Cinema
-ajusterEntreesFilmCinema _ = Cinema "Vide" "Vide" []		  
-		  
+ajusterEntreesFilmCinema ((Cinema nomC adrC repertoireC), film, nbE) = (Cinema nomC adrC (modifierRepertoirePos indice repertoireC (film, nbE, prix)))		  
+		  where 
+        prix = troisieme (repertoireC !! (trouverLaPosition film (premier (unzip3 repertoireC))))
+        indice = trouverLaPosition film (premier $ unzip3 repertoireC)
+
 {- 14c - Quel est le revenu total d'un film dans un cinema donnée? Retourner 0 si la liste des cinéma est vide ou si le film n'existe pas 
 4pts-}		  
 revenuFilmCinema :: Film -> Cinema -> Int
