@@ -294,21 +294,23 @@ acteursSelectionnesNouvelle :: (Film, [Critere], [Acteur]) -> [Acteur]
 acteursSelectionnesNouvelle (_, [], lacteurs) = []
 acteursSelectionnesNouvelle (_, _, []) = [] 
 acteursSelectionnesNouvelle (film, lcriteres, lacteurs) | realisateur film == PasDeRealisateur = throw PasDeRealisateur
-                                                        | getnbacteurF film > (length accChoisis) = throw PasAssezDacteurs
                                                         | producteur film == PasDeProducteur = throw PasDeProducteur
+                                                        | getnbacteurF film > (length accChoisis) = throw PasAssezDacteurs
                                                         | sommeSalaires accChoisis > getbudgetF film = throw BudgetInsuffisant
                                                         | otherwise = accChoisis
                                                                     where
-                                                                      accChoisis = take (getnbacteurF film) [ac | acCri <- lcriteres, ac <- lacteurs, (acCri ac) && (restriction ac film)]
--- acteursSelectionnesNouvelle (film, [x], lacteurs) = if ac == [] then throw PasAssezDacteurs else ac
---                                                       where ac = take 1 [ac | ac <- lacteurs, (x ac) && (restriction ac film)]
--- acteursSelectionnesNouvelle (film, (x:xs), lacteurs) | realisateur film == PasDeRealisateur = throw PasDeRealisateur
---                                                      | sommeSalaires accChoisis > getbudgetF film = throw BudgetInsuffisant
---                                                      | producteur film == PasDeProducteur = throw PasDeProducteur
---                                                      | otherwise = accChoisis
---                                                                     where
---                                                                       ac = [ac | ac <- lacteurs, (x ac) && (restriction ac film)] !! 0
---                                                                       accChoisis = ac:acteursSelectionnesNouvelle (film, xs, (exclureActeurs (ac, lacteurs)) )
+                                                                      accChoisis = (acteursSelectionnesNouvelleRecurs (film, lcriteres, lacteurs) )
+
+
+acteursSelectionnesNouvelleRecurs :: (Film, [Critere], [Acteur]) -> [Acteur]
+acteursSelectionnesNouvelleRecurs (_, [], lacteurs) = []
+acteursSelectionnesNouvelleRecurs (_, _, []) = []                                                                    
+acteursSelectionnesNouvelleRecurs (film, [x], lacteurs) = if ac == [] then throw PasAssezDacteurs else ac
+                                                            where ac = take 1 [ac | ac <- lacteurs, (x ac) && (restriction ac film)]
+acteursSelectionnesNouvelleRecurs (film, (x:xs), lacteurs) = accChoisis
+                                                              where
+                                                                ac = [ac | ac <- lacteurs, (x ac) && (restriction ac film)] !! 0
+                                                                accChoisis = ac:acteursSelectionnesNouvelleRecurs (film, xs, (exclureActeurs (ac, lacteurs)) )
 
 	
 	
