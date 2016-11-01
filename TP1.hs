@@ -418,8 +418,13 @@ Heureusement que ces informations en provenance des producteurs, sont bien allig
 pour un cinéma donné. 
  5pts-}
 restorerRepertoire :: Cinema -> [Film] ->[Int] ->[Int]-> Cinema 
-restorerRepertoire _ _ _ _ = Cinema "Vide" "Vide" []
-
+restorerRepertoire (Cinema nomC adrC repertoireC) lfilms lentres lprix = foldl (\cin film -> ajusterEntreesFilmCinema(cin, film, (nbE film) ) ) cinRecup lfilms 
+                                                                         where
+                                                                            rep = zip3 lfilms lentres lprix
+                                                                            prix = ( \film -> troisieme (repertoireC !! (trouverLaPosition film (premier (unzip3 repertoireC)))) )
+                                                                            nbE = ( \film -> deuxieme (repertoireC !! (trouverLaPosition film (premier (unzip3 repertoireC)))) )
+                                                                            cinRecup = foldl (\cin film -> attribuerFilmCinema (cin ,film, (prix film) ) ) (Cinema nomC adrC repertoireC) lfilms
+                                                                          
 {- 14e Quel est le niveau moyen d'achalandage d'un cinéma donné (soit le nombre moyen d'entrées par film); nom de la fonction: achalandage 
 4pts-}
 
