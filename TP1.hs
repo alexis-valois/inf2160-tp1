@@ -407,7 +407,10 @@ ajusterEntreesFilmCinema ((Cinema nomC adrC repertoireC), film, nbE) = (Cinema n
 {- 14c - Quel est le revenu total d'un film dans un cinema donnée? Retourner 0 si la liste des cinéma est vide ou si le film n'existe pas 
 4pts-}		  
 revenuFilmCinema :: Film -> Cinema -> Int
-revenuFilmCinema _ _ = 0
+revenuFilmCinema film (Cinema nomC adrC repertoireC) = nbE * prix   
+                                where 
+                                  nbE = deuxieme (repertoireC !! (trouverLaPosition film (premier (unzip3 repertoireC))))
+                                  prix = troisieme (repertoireC !! (trouverLaPosition film (premier (unzip3 repertoireC))))
 
 {- 14d -  reconstitution du répertoire d'un cinéma après perte de données. Un cinéma doit absolument reconstituer son répertoire suite à une perte de celui-ci.
 seul recours: les 3 listes distinctes récupérées chez les producteurs, une contenant les films attribués, l'autre pour les entrées et la dernière pour les prix.
