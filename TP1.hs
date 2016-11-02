@@ -407,10 +407,12 @@ ajusterEntreesFilmCinema ((Cinema nomC adrC repertoireC), film, nbE) = (Cinema n
 {- 14c - Quel est le revenu total d'un film dans un cinema donnée? Retourner 0 si la liste des cinéma est vide ou si le film n'existe pas 
 4pts-}		  
 revenuFilmCinema :: Film -> Cinema -> Int
-revenuFilmCinema film (Cinema nomC adrC repertoireC) = nbE * prix   
-                                where 
-                                  nbE = deuxieme (repertoireC !! (trouverLaPosition film (premier (unzip3 repertoireC))))
-                                  prix = troisieme (repertoireC !! (trouverLaPosition film (premier (unzip3 repertoireC))))
+revenuFilmCinema film (Cinema nomC adrC repertoireC) | not (any (==film) lfilms) = 0
+                                                     | otherwise = nbE * prix   
+                                                                      where 
+                                                                        lfilms = premier (unzip3 repertoireC)
+                                                                        nbE = deuxieme (repertoireC !! (trouverLaPosition film lfilms))
+                                                                        prix = troisieme (repertoireC !! (trouverLaPosition film lfilms))
 
 {- 14d -  reconstitution du répertoire d'un cinéma après perte de données. Un cinéma doit absolument reconstituer son répertoire suite à une perte de celui-ci.
 seul recours: les 3 listes distinctes récupérées chez les producteurs, une contenant les films attribués, l'autre pour les entrées et la dernière pour les prix.
@@ -436,7 +438,12 @@ films et une liste de cinemas, retourne une liste de pairs (film, revenuTotal) t
 7pts 
  -}
 meilleursFilms :: [Film] -> [Cinema] -> [(Film, Int)]
-meilleursFilms _ _ = []
+meilleursFilms [] _ = []
+meilleursFilms _ [] = []
+meilleursFilms lfilms lcinema = listePairesTriee2e lRevenuFilm
+                                where
+                                  lrevenu = map (\film -> sum[revenuFilmCinema film cin | cin <- lcinema]) lfilms
+                                  lRevenuFilm = zip lfilms lrevenu
 
 {-  15b - Meilleur(s) acteur(s)... Il s'agit de l'acteur ou des acteurs ayant joué dans LE(S) meilleur(s) film(s) et qui a(ont) le plus d'expérience. Attention: Juste pour cette question, la notion 
 d'expérience d'un acteur s'estime uniquement par le nombre de films dans lesquels il a joué (et non par rapport au nombre d'années passé dans l'industrie. 
