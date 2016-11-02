@@ -481,11 +481,19 @@ meilleursActeurs lacteurs lfilms lcinemas = meilleursActeurs
                                               meilleursActeurs = lesPlusExperimentes (experienceActeurs lacteursMeilleurF)
 	
 
-{- 15c - écrire la fonction box_office qui calcule et retourne le revenu total d'un film pour une liste de salle de cinema donnée. Tenir compte du prix du film pour chaque cinema et du nombre d'entrées.
+{- 15c - écrire la fonction box_office qui calcule et retourne le revenu total d'un film pour une liste de salle de cinema donnée.
+Tenir compte du prix du film pour chaque cinema et du nombre d'entrées.
 Retourner 0 si la liste des cinéma est vide ou si le film n'existe pas 
 7pts-}		  
 box_office :: Film -> [Cinema] -> Int
-box_office _ _ = 0	
+box_office _ [] = 0
+box_office film lcinemas | find (\f -> f == film) lfilms == Nothing = 0
+                         | otherwise = sum revenusParCin
+                            where
+                              revenusParCin = map (\cin -> revenuFilmCinema film cin) lcinemas 
+                              lfilms = foldl (\acc (Cinema _ _ repertoireC) -> acc ++ premier (unzip3 repertoireC) ) [] lcinemas
+
+
 									
 {-  15d- La fonction profit retourne vraie si le film diffusé dans les salles de cinéma données a engendré des profits et faux la cas échéant.
 il y a profit pour un film si son revenu total dans l'ensemble des cinemas de la liste donnée est est supérieur à son coût de production.
