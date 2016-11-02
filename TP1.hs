@@ -500,4 +500,7 @@ il y a profit pour un film si son revenu total dans l'ensemble des cinemas de la
 4pts
 -}	
 profit :: (Film, [Cinema]) -> Bool
-profit _ = False
+profit (film, lcinemas) = revenuTotal > (cout film)
+                          where
+                            revenusParCin = map (\cin -> revenuFilmCinema film cin) lcinemas 
+                            revenuTotal = sum revenusParCin
