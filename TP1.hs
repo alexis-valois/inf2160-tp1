@@ -426,7 +426,10 @@ restorerRepertoire (Cinema nomC adrC _) lfilms lentres lprix = (Cinema nomC adrC
 4pts-}
 
 achalandage :: Cinema -> Int
-achalandage _ = 0
+achalandage (Cinema _ _ rep) = (sum(entreesFilms) `div` nbFilms)
+                                where
+                                  entreesFilms = map (\x -> (deuxieme x) ) rep
+                                  nbFilms = length rep
 
 {-  15a - Meilleurs films... En considérant que la valeur d'un film est donnée par son revenu total, écrire une fonction qui retourne étant donnée une liste de 
 films et une liste de cinemas, retourne une liste de pairs (film, revenuTotal) triée par ordre croissant de la valeur de chaque film.
