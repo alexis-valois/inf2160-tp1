@@ -445,9 +445,10 @@ meilleursFilms lfilms lcinema = listePairesTriee2e lRevenuFilm
                                   lrevenu = map (\film -> sum[revenuFilmCinema film cin | cin <- lcinema]) lfilms
                                   lRevenuFilm = zip lfilms lrevenu
 
-{-  15b - Meilleur(s) acteur(s)... Il s'agit de l'acteur ou des acteurs ayant joué dans LE(S) meilleur(s) film(s) et qui a(ont) le plus d'expérience. Attention: Juste pour cette question, la notion 
-d'expérience d'un acteur s'estime uniquement par le nombre de films dans lesquels il a joué (et non par rapport au nombre d'années passé dans l'industrie. 
-Le resultat est une liste de paires dont le premier élément est le nom de l'acteur, et le second le nombre de films de ce dernier. Cette liste doit être limitée seulement aux MEILLEURS acteurs.
+{-  15b - Meilleur(s) acteur(s)... Il s'agit de l'acteur ou des acteurs ayant joué dans LE(S) meilleur(s) film(s) et qui a(ont) le plus d'expérience. 
+Attention: Juste pour cette question, la notion d'expérience d'un acteur s'estime uniquement par le nombre de films dans lesquels il a joué 
+(et non par rapport au nombre d'années passé dans l'industrie. Le resultat est une liste de paires dont le premier élément est le nom de l'acteur, 
+et le second le nombre de films de ce dernier. Cette liste doit être limitée seulement aux MEILLEURS acteurs.
  8pts -}
  -- ************************************************************************************************************	
 -- *********************** Début: Fonctions d'aide pour cette question   ***************************************
@@ -471,7 +472,13 @@ joueDans act@(Acteur _ _ _ _ _ facteur) (f:fs) =  (elem f facteur) || (joueDans 
 -- *********************** Fin: Fonctions d'aide pour cette questions      *************************************
 -- *************************************************************************************************************
 meilleursActeurs :: [Acteur] -> [Film] -> [Cinema] -> [(Acteur, Int)]
-meilleursActeurs _ _ _ = []
+meilleursActeurs lacteurs lfilms lcinemas = meilleursActeurs
+                                            where
+                                              scoreFilmList = meilleursFilms lfilms lcinemas
+                                              revenuMeilleurF = snd (head scoreFilmList)
+                                              lmeilleurF = [fst x | x <- scoreFilmList, (snd x) == revenuMeilleurF]
+                                              lacteursMeilleurF = [x | x <- lacteurs, joueDans x lmeilleurF]
+                                              meilleursActeurs = lesPlusExperimentes (experienceActeurs lacteursMeilleurF)
 	
 
 {- 15c - écrire la fonction box_office qui calcule et retourne le revenu total d'un film pour une liste de salle de cinema donnée. Tenir compte du prix du film pour chaque cinema et du nombre d'entrées.
