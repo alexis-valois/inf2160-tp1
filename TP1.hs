@@ -1,3 +1,4 @@
+-- Alexis Valois-Adamowicz VALA10049105
 module TP1 where 
 
 --Importation de modules nécessaires
